@@ -22,7 +22,7 @@ epilogue = [
         'Поговорим?'
 ]
 
-def pMyProc(msg):
+def analize(msg):
     word_count = len(msg.split(' '))
     char_count = len(''.join(msg.split(' ')))
     word_len = round(char_count/word_count,2)    
@@ -32,7 +32,7 @@ def pMyProc(msg):
         f'средняя длина слова - {word_len}'
 
 @dp.message_handler(commands=['start'])
-async def pWelcome(message: types.Message):
+async def welcome(message: types.Message):
     # await message.reply('Привет!')
     random.shuffle(preamble)
     random.shuffle(epilogue)
@@ -40,7 +40,7 @@ async def pWelcome(message: types.Message):
 
 @dp.message_handler()
 async def echo(message: types.Message):    
-    await message.answer(pMyProc(message.text))
+    await message.answer(analize(message.text))
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

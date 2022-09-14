@@ -36,7 +36,7 @@ async def pWelcome(message: types.Message):
     # await message.reply('Привет!')
     random.shuffle(preamble)
     random.shuffle(epilogue)
-    await message.answer(f'{preamble}\n{epilogue}')
+    await message.answer(f'{preamble[0]}\n{epilogue[0]}')
 
 @dp.message_handler()
 async def echo(message: types.Message):    

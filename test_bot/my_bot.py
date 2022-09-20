@@ -1,5 +1,6 @@
 from asyncore import dispatcher
 import logging
+from time import sleep
 from aiogram import Bot, Dispatcher, executor, types
 from config import TOKEN
 import keyboards as kb
@@ -35,10 +36,16 @@ def analize(msg):
 @dp.callback_query_handler()
 async def process_callback_kb(callback_query: types.CallbackQuery):
     code = callback_query.data
-    await bot.answer_callback_query(callback_query.id,\
+
+    # позволяет не зависать чату, во время "поиска ответа" ботом
+    # например, пока выполняется 10-секундный слип, пользователь
+    # может отправить текст боту и получить ответ от функции analize
+    # 
+    await bot.answer_callback_query(callback_query.id)
+    
+    #sleep(10)
+    await bot.send_message(callback_query.from_user.id,\
         f'Нажата кнопка {code}')
-    # await bot.send_message(callback_query.from_user.id,\
-    #     f'Нажата кнопка {code}')
 
 @dp.message_handler(commands=['start'])
 async def welcome(message: types.Message):

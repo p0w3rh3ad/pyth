@@ -1,2 +1,2 @@
-config.py
-__pycache__
+test_bot/config.py
+test_bot/__pycache__

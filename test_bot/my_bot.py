@@ -55,6 +55,10 @@ async def welcome(message: types.Message):
     await message.answer(f'{preamble[0]}\n{epilogue[0]}')
     await message.answer('Тест кнопок', reply_markup=kb.inline_kb)
 
+@dp.message_handler(content_types=['sticker'])
+async def answ_stick(message: types.Message):
+    await message.reply('qwerty')
+
 @dp.message_handler()
 async def echo(message: types.Message):    
     await message.answer(analize(message.text))

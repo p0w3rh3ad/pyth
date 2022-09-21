@@ -1,6 +1,6 @@
 from asyncore import dispatcher
 import logging
-from time import sleep
+# from time import sleep
 from aiogram import Bot, Dispatcher, executor, types
 from config import TOKEN
 import keyboards as kb

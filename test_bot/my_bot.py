@@ -53,15 +53,24 @@ async def welcome(message: types.Message):
     random.shuffle(preamble)
     random.shuffle(epilogue)
     await message.answer(f'{preamble[0]}\n{epilogue[0]}')
-    await message.answer('Тест кнопок', reply_markup=kb.inline_kb)
+    await message.answer('Тест кнопок', reply_markup=kb.inline_kb)    
 
-@dp.message_handler(content_types=['sticker'])
-async def answ_stick(message: types.Message):
-    await message.reply('qwerty')
-
-@dp.message_handler()
-async def echo(message: types.Message):    
-    await message.answer(analize(message.text))
+@dp.message_handler(content_types=types.ContentType.ANY)
+async def answ(message: types.Message):
+    if message.content_type == 'text':
+        await message.answer(analize(message.text))
+    else:
+        random.shuffle(epilogue)
+        await message.reply(f'Люблю, когда со мной разговаривают ;-)\n'\
+            f'{epilogue[0]}')
+    
+# # @dp.message_handler(content_types=['sticker', 'audio',\
+# #    'photo', 'document'])
+# @dp.message_handler(content_types=types.ContentType.ANY)
+# async def answ_stick(message: types.Message):
+#     random.shuffle(epilogue)
+#     await message.reply(f'Люблю, когда со мной разговаривают ;-)\n'\
+#         f'{epilogue[0]}')
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

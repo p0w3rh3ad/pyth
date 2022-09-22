@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from config import TOKEN
 import keyboards as kb
 import random
+import apscheduler
 
 logging.basicConfig(level=logging.INFO)
 

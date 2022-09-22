@@ -14,4 +14,4 @@ reply_kb = ReplyKeyboardMarkup()
 #     inline_kb.insert(btn)
 
 for btn in range(1,6):
-    inline_kb.insert(InlineKeyboardButton(f'Кнопка {btn}', callback_data=f'11{btn}'))
+    inline_kb.insert(InlineKeyboardButton(f'Кнопка {btn}', callback_data=f'{btn}'))

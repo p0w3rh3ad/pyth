@@ -9,6 +9,8 @@ import apscheduler
 
 logging.basicConfig(level=logging.INFO)
 
+GLOBAL_DICT = dict()
+
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
@@ -59,7 +61,12 @@ async def welcome(message: types.Message):
 @dp.message_handler(content_types=types.ContentType.ANY)
 async def answ(message: types.Message):
     if message.content_type == 'text':
+        # await message.answer(f'{message.from_user.id}')
+        user_dict = dict()
+        user_dict.update({'analize_text':message.text})
+        GLOBAL_DICT.update({str(message.from_user.id):dict.copy(user_dict)})
         await message.answer(analize(message.text))
+        await message.answer(f"Храню в словаре текст: {GLOBAL_DICT[str(message.from_user.id)]['analize_text']}")
     else:
         random.shuffle(epilogue)
         await message.reply(f'Люблю, когда со мной разговаривают ;-)\n'\

@@ -1,6 +1,6 @@
 from asyncore import dispatcher
 import logging
-# from time import sleep
+from time import sleep
 from aiogram import Bot, Dispatcher, executor, types
 from config import TOKEN
 import keyboards as kb
@@ -10,7 +10,7 @@ import apscheduler
 logging.basicConfig(level=logging.INFO)
 
 # глобальный словарь сессии
-GLOBAL_DICT = dict()
+GLOBAL_DICT = {'user_id':{'key':'value'}}
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
@@ -72,10 +72,16 @@ async def keyb(message: types.Message):
 async def answ(message: types.Message):
     if message.content_type == 'text':
         # await message.answer(f'{message.from_user.id}')
-        user_dict = dict()        
+        
+        # user_dict = dict()        
         # готовим пользовательский текст для хранения в словаре
-        user_dict.update({'analize_text':message.text})        
-        GLOBAL_DICT.update({str(message.from_user.id):dict.copy(user_dict)})
+        # user_dict.update({'analize_text':message.text})        
+        # sleep(5)
+        # GLOBAL_DICT.update({str(message.from_user.id):dict.copy(user_dict)})
+        
+        GLOBAL_DICT.update({str(message.from_user.id):\
+            {'analize_text':message.text}})
+
         await message.answer(analize(message.text))        
     else:
         random.shuffle(epilogue)

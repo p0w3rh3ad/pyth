@@ -47,8 +47,12 @@ async def process_callback_kb(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     
     #sleep(10)
-    await bot.send_message(callback_query.from_user.id,\
-        f'Нажата кнопка {code}')
+    if code == 5:
+        await bot.send_message(f"Храню в словаре текст: "\
+            f"{GLOBAL_DICT[str(callback_query.from_user.id)]['analize_text']}")
+    else:
+        await bot.send_message(callback_query.from_user.id,\
+            f'Нажата кнопка {code}')
 
 @dp.message_handler(commands=['start'])
 async def welcome(message: types.Message):
@@ -58,6 +62,10 @@ async def welcome(message: types.Message):
     await message.answer(f'{preamble[0]}\n{epilogue[0]}')
     await message.answer('Тест кнопок', reply_markup=kb.inline_kb)    
 
+@dp.message_handler(commands=['keyb'])
+async def keyb(message: types.Message):    
+    await message.answer(reply_markup=kb.inline_kb)
+
 @dp.message_handler(content_types=types.ContentType.ANY)
 async def answ(message: types.Message):
     if message.content_type == 'text':
@@ -66,7 +74,8 @@ async def answ(message: types.Message):
         user_dict.update({'analize_text':message.text})
         GLOBAL_DICT.update({str(message.from_user.id):dict.copy(user_dict)})
         await message.answer(analize(message.text))
-        await message.answer(f"Храню в словаре текст: {GLOBAL_DICT[str(message.from_user.id)]['analize_text']}")
+        # await message.answer(f"Храню в словаре текст: "\
+        #     f"{GLOBAL_DICT[str(message.from_user.id)]['analize_text']}")
     else:
         random.shuffle(epilogue)
         await message.reply(f'Люблю, когда со мной разговаривают ;-)\n'\

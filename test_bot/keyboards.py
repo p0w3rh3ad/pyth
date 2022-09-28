@@ -13,5 +13,6 @@ reply_kb = ReplyKeyboardMarkup()
 # for btn in list_btn:
 #     inline_kb.insert(btn)
 
-for btn in range(1,6):
+for btn in range(1,3):
     inline_kb.insert(InlineKeyboardButton(f'Кнопка {btn}', callback_data=f'{btn}'))
+inline_kb.insert(InlineKeyboardButton('Словарь', callback_data='analize_text'))

@@ -37,6 +37,9 @@ def analize(msg):
         f'символов - {char_count}\n'\
         f'средняя длина слова - {word_len}'
 
+def user_data_update(id,key,value):
+    GLOBAL_DICT.update({str(id):{str(key):str(value)}})
+
 @dp.callback_query_handler()
 async def process_callback_kb(callback_query: types.CallbackQuery):
     code = callback_query.data
@@ -48,7 +51,7 @@ async def process_callback_kb(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     
     #sleep(10)
-    if code == '5':
+    if code == 'analize_text':
         await bot.send_message(callback_query.from_user.id,\
             f"Храню в словаре текст: "\
             f"{GLOBAL_DICT[str(callback_query.from_user.id)]['analize_text']}")
@@ -79,8 +82,11 @@ async def answ(message: types.Message):
         # sleep(5)
         # GLOBAL_DICT.update({str(message.from_user.id):dict.copy(user_dict)})
         
-        GLOBAL_DICT.update({str(message.from_user.id):\
-            {'analize_text':message.text}})
+        # GLOBAL_DICT.update({str(message.from_user.id):\
+        #     {'analize_text':message.text}})
+
+        key = 'analize_text'
+        user_data_update(message.from_user.id,key,message.text)
 
         await message.answer(analize(message.text))        
     else:

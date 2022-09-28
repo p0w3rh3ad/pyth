@@ -53,8 +53,8 @@ async def process_callback_kb(callback_query: types.CallbackQuery):
     #sleep(10)
     if code == 'analize_text':
         await bot.send_message(callback_query.from_user.id,\
-            f"Храню в словаре текст: "\
-            f"{GLOBAL_DICT[str(callback_query.from_user.id)]['analize_text']}")
+            f'Храню в словаре текст: '\
+            f'{GLOBAL_DICT[str(callback_query.from_user.id)][code]}')
     else:
         await bot.send_message(callback_query.from_user.id,\
             f'Нажата кнопка {code}')
@@ -74,33 +74,13 @@ async def keyb(message: types.Message):
 @dp.message_handler(content_types=types.ContentType.ANY)
 async def answ(message: types.Message):
     if message.content_type == 'text':
-        # await message.answer(f'{message.from_user.id}')
-        
-        # user_dict = dict()        
-        # готовим пользовательский текст для хранения в словаре
-        # user_dict.update({'analize_text':message.text})        
-        # sleep(5)
-        # GLOBAL_DICT.update({str(message.from_user.id):dict.copy(user_dict)})
-        
-        # GLOBAL_DICT.update({str(message.from_user.id):\
-        #     {'analize_text':message.text}})
-
         key = 'analize_text'
         user_data_update(message.from_user.id,key,message.text)
-
         await message.answer(analize(message.text))        
     else:
         random.shuffle(epilogue)
         await message.reply(f'Люблю, когда со мной разговаривают ;-)\n'\
             f'{epilogue[0]}')
         
-# # @dp.message_handler(content_types=['sticker', 'audio',\
-# #    'photo', 'document'])
-# @dp.message_handler(content_types=types.ContentType.ANY)
-# async def answ_stick(message: types.Message):
-#     random.shuffle(epilogue)
-#     await message.reply(f'Люблю, когда со мной разговаривают ;-)\n'\
-#         f'{epilogue[0]}')
-
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

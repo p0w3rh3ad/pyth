@@ -35,8 +35,17 @@ def analize(msg):
         f'символов - {char_count}\n'\
         f'средняя длина слова - {word_len}'
 
-def user_data_update(id,key,value):
+def user_data_update(id, key, value):
     GLOBAL_DICT.update({str(id):{str(key):str(value)}})
+
+async def send_notif(dp: Dispatcher, user_id):
+    await dp.bot.send_message(user_id,'Вы просили маякнуть :-) ')
+
+def sched_job(user_id):
+    user_notif = datetime.now() + timedelta(minutes=1)
+    user_notif = user_notif.strftime('%Y-%m-%d %H:%M:%S')    
+    scheduler.add_job(send_notif, 'date', run_date=user_notif, args=(dp, user_id))
+    print(user_notif, scheduler.get_jobs())
 
 @dp.callback_query_handler()
 async def process_callback_kb(callback_query: types.CallbackQuery):
@@ -53,12 +62,10 @@ async def process_callback_kb(callback_query: types.CallbackQuery):
         await bot.send_message(callback_query.from_user.id,\
             f'Храню в словаре текст: '\
             f'{GLOBAL_DICT[str(callback_query.from_user.id)][code]}')
-
-    elif code == 'scheduler':
-        user_notif = datetime.now() + timedelta(minutes=1)
-        user_notif = user_notif.strftime('%Y-%m-%d %H:%M:%S')
-        scheduler.add_job(print('uifsdfhzslf'), 'date', run_date=user_notif, args=(dp,))
-
+    elif code == 'scheduler':       
+        sched_job(callback_query.from_user.id)
+        await bot.send_message(callback_query.from_user.id,\
+            f'Внимание! Заказан маячок через 1 минуту')
     else:
         await bot.send_message(callback_query.from_user.id,\
             f'Нажата кнопка {code}')
@@ -79,7 +86,7 @@ async def keyb(message: types.Message):
 async def answ(message: types.Message):
     if message.content_type == 'text':
         key = 'analize_text'
-        user_data_update(message.from_user.id,key,message.text)
+        user_data_update(message.from_user.id, key, message.text)
         await message.answer(analize(message.text))        
     else:
         random.shuffle(epilogue)

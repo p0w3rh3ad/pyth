@@ -5,7 +5,8 @@ from aiogram import Bot, Dispatcher, executor, types
 from config import TOKEN
 import keyboards as kb
 import random
-import apscheduler
+from datetime import datetime, timedelta
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 logging.basicConfig(level=logging.INFO)
 
@@ -14,19 +15,16 @@ GLOBAL_DICT = {'user_id':{'key':'value'}}
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
+scheduler = AsyncIOScheduler()
 
-preamble = [
-    'Привет!',
+preamble = ['Привет!',
     'Доброго времени суток :-)',
     'И вам не хворать!',
-    'Здрав будь, боярин...'
-]
-epilogue = [
-    'Пеши исчо',
+    'Здрав будь, боярин...']
+epilogue = ['Пеши исчо',
     'Отправьте мне какой-нибудь текст',
     'Мне нравятся ФЫВА и ОЛДЖ...',
-    'Поговорим?'
-]
+    'Поговорим?']
 
 def analize(msg):
     word_count = len(msg.split(' '))
@@ -55,6 +53,12 @@ async def process_callback_kb(callback_query: types.CallbackQuery):
         await bot.send_message(callback_query.from_user.id,\
             f'Храню в словаре текст: '\
             f'{GLOBAL_DICT[str(callback_query.from_user.id)][code]}')
+
+    elif code == 'scheduler':
+        user_notif = datetime.now() + timedelta(minutes=1)
+        user_notif = user_notif.strftime('%Y-%m-%d %H:%M:%S')
+        scheduler.add_job(print('uifsdfhzslf'), 'date', run_date=user_notif, args=(dp,))
+
     else:
         await bot.send_message(callback_query.from_user.id,\
             f'Нажата кнопка {code}')
@@ -68,7 +72,7 @@ async def welcome(message: types.Message):
     await message.answer('Тест кнопок', reply_markup=kb.inline_kb)    
 
 @dp.message_handler(commands=['keyb'])
-async def keyb(message: types.Message):    
+async def keyb(message: types.Message):
     await message.answer('Мои кнопки',reply_markup=kb.inline_kb)
 
 @dp.message_handler(content_types=types.ContentType.ANY)
@@ -81,6 +85,7 @@ async def answ(message: types.Message):
         random.shuffle(epilogue)
         await message.reply(f'Люблю, когда со мной разговаривают ;-)\n'\
             f'{epilogue[0]}')
-        
+
 if __name__ == '__main__':
+    scheduler.start()
     executor.start_polling(dp, skip_updates=True)

@@ -1,7 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove,\
     InlineKeyboardMarkup, InlineKeyboardButton
 
-inline_kb = InlineKeyboardMarkup(row_width=2)
+inline_kb = InlineKeyboardMarkup(row_width=1)
 reply_kb = ReplyKeyboardMarkup()
 
 # inline_btn_1 = InlineKeyboardButton('Button 1', callback_data='btn_1')
@@ -13,6 +13,7 @@ reply_kb = ReplyKeyboardMarkup()
 # for btn in list_btn:
 #     inline_kb.insert(btn)
 
-for btn in range(1,3):
-    inline_kb.insert(InlineKeyboardButton(f'Кнопка {btn}', callback_data=f'{btn}'))
+# for btn in range(1,3):
+#     inline_kb.insert(InlineKeyboardButton(f'Кнопка {btn}', callback_data=f'{btn}'))
 inline_kb.insert(InlineKeyboardButton('Словарь', callback_data='analize_text'))
+inline_kb.insert(InlineKeyboardButton('Таймер на 1 мин.', callback_data='scheduler'))
